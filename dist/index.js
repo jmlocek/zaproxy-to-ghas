@@ -16,13 +16,26 @@ const result_seperator = '<br/><br/> ------- <br/><br/>';
 const parse = (object) => {
     const rules = object.site.reduce((acc, cur) => {
         const alerts = cur.alerts.map((alert) => {
-            let severity = 'warning';
-            if (alert.riskdesc.includes('High '))
-                severity = 'error';
-            if (alert.riskdesc.includes('Medium '))
-                severity = 'warning';
-            if (alert.riskdesc.includes('Informational '))
-                severity = 'note';
+            // Default SARIF and CVSS-style severity
+            let severity = 'warning'; // Default SARIF level
+            let securitySeverity = 5.5; // Default CVSS severity (Medium)
+            // Map ZAP severities to SARIF levels and CVSS-style severities
+            if (alert.riskdesc.includes('Critical ')) {
+                severity = 'error'; // SARIF level
+                securitySeverity = 9.5; // CVSS-style Critical severity
+            }
+            else if (alert.riskdesc.includes('High ')) {
+                severity = 'error'; // SARIF level
+                securitySeverity = 8.0; // CVSS-style High severity
+            }
+            else if (alert.riskdesc.includes('Medium ')) {
+                severity = 'warning'; // SARIF level
+                securitySeverity = 5.5; // CVSS-style Medium severity
+            }
+            else if (alert.riskdesc.includes('Informational ')) {
+                severity = 'note'; // SARIF level
+                securitySeverity = 3.0; // CVSS-style Low severity
+            }
             return {
                 id: alert.alertRef.toString(),
                 shortDescription: { text: alert.name },
@@ -32,10 +45,12 @@ const parse = (object) => {
                 helpUri: `https://www.zaproxy.org/docs/alerts/${alert.alertRef}`,
                 defaultConfiguration: { level: severity },
                 properties: {
+                    'security-severity': securitySeverity,
                     tags: [`external/cwe/cwe-${alert.cweid}`]
                 }
             };
         });
+        // Filter duplicates by `id`
         for (const [index] of alerts.entries()) {
             if (!acc.some(r => r.id.toString() === alerts[index].id.toString())) {
                 acc.push(alerts[index]);
