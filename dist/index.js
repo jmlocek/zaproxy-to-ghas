@@ -16,13 +16,13 @@ const result_seperator = '<br/><br/> ------- <br/><br/>';
 const parse = (object) => {
     const rules = object.site.reduce((acc, cur) => {
         const alerts = cur.alerts.map((alert) => {
-            let severity = 'Critical';
+            let severity = 'warning';
             if (alert.riskdesc.includes('High '))
-                severity = 'High';
+                severity = 'error';
             if (alert.riskdesc.includes('Medium '))
-                severity = 'Medium';
+                severity = 'warning';
             if (alert.riskdesc.includes('Informational '))
-                severity = 'Low';
+                severity = 'note';
             return {
                 id: alert.alertRef.toString(),
                 shortDescription: { text: alert.name },
