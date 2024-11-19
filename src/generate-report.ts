@@ -8,10 +8,10 @@ const parse = (object: reportTypes.zapObject): reportTypes.report => {
   const rules = object.site.reduce(
     (acc: reportTypes.rule[], cur: reportTypes.zapObjectSite) => {
       const alerts = cur.alerts.map((alert: reportTypes.zapObjectAlert) => {
-        let severity = 'warning'
-        if (alert.riskdesc.includes('High ')) severity = 'error'
-        if (alert.riskdesc.includes('Medium ')) severity = 'warning'
-        if (alert.riskdesc.includes('Informational ')) severity = 'note'
+        let severity = 'Critical'
+        if (alert.riskdesc.includes('High ')) severity = 'High'
+        if (alert.riskdesc.includes('Medium ')) severity = 'Medium'
+        if (alert.riskdesc.includes('Informational ')) severity = 'Low'
 
         return {
           id: alert.alertRef.toString(),
