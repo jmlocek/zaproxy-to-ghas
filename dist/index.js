@@ -18,23 +18,23 @@ const parse = (object) => {
         const alerts = cur.alerts.map((alert) => {
             // Default SARIF and CVSS-style severity
             let severity = 'warning'; // Default SARIF level
-            let securitySeverity = 5.5; // Default CVSS severity (Medium)
+            let securitySeverity = "5.5"; // Default CVSS severity (Medium)
             // Map ZAP severities to SARIF levels and CVSS-style severities
             if (alert.riskdesc.includes('Critical ')) {
                 severity = 'error'; // SARIF level
-                securitySeverity = 9.5; // CVSS-style Critical severity
+                securitySeverity = "9.5"; // CVSS-style Critical severity
             }
             else if (alert.riskdesc.includes('High ')) {
                 severity = 'error'; // SARIF level
-                securitySeverity = 8.0; // CVSS-style High severity
+                securitySeverity = "8.0"; // CVSS-style High severity
             }
             else if (alert.riskdesc.includes('Medium ')) {
                 severity = 'warning'; // SARIF level
-                securitySeverity = 5.5; // CVSS-style Medium severity
+                securitySeverity = "5.5"; // CVSS-style Medium severity
             }
             else if (alert.riskdesc.includes('Informational ')) {
                 severity = 'note'; // SARIF level
-                securitySeverity = 3.0; // CVSS-style Low severity
+                securitySeverity = "3.0"; // CVSS-style Low severity
             }
             return {
                 id: alert.alertRef.toString(),
