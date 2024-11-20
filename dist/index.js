@@ -32,9 +32,13 @@ const parse = (object) => {
                 severity = 'warning'; // SARIF level
                 securitySeverity = "5.5"; // CVSS-style Medium severity
             }
+            else if (alert.riskdesc.includes('Low ')) {
+                severity = 'warning'; // SARIF level
+                securitySeverity = "3.0"; // CVSS-style Medium severity
+            }
             else if (alert.riskdesc.includes('Informational ')) {
                 severity = 'note'; // SARIF level
-                securitySeverity = "3.0"; // CVSS-style Low severity
+                securitySeverity = "0.0"; // CVSS-style Low severity
             }
             return {
                 id: alert.alertRef.toString(),
