@@ -1,20 +1,21 @@
-import * as artifact from '@actions/artifact'
+import {DefaultArtifactClient} from '@actions/artifact'
+const artifact = new DefaultArtifactClient()
+
 
 async function uploadSarifArtifact(filename: string): Promise<void> {
-  const artifactClient = artifact.create()
-  const artifactName = 'ZAProxy-sarif-report'
-  const files = [filename]
+  const artifactName = 'ZAProxy-sarif-report';
+  const files = [filename]; // Files to upload, relative or absolute paths
+  const options = {
+    retentionDays: 10, // Optional: specify retention period
+  };
 
-  const rootDirectory = '.' // Also possible to use __dirname
-  const options = {continueOnError: false}
-
-  await artifactClient.uploadArtifact(
-    artifactName,
-    files,
-    rootDirectory,
-    options
-  )
-  return
+  try {
+    const { id, size } = await artifact.uploadArtifact(artifactName, files, '.');
+    console.log(`Artifact uploaded successfully: ID=${id}, Size=${size} bytes`);
+  } catch (error) {
+    console.error('Failed to upload artifact:', error);
+    throw error;
+  }
 }
 
-export default uploadSarifArtifact
+export default uploadSarifArtifact;
